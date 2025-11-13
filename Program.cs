@@ -31,9 +31,7 @@ class TelegramUserClient
         try
         {
             Console.WriteLine("\n=== SIZNING GURUHLARINGIZ ===\n");
-
             var chats = await client.Messages_GetAllChats();
-
             foreach (var chat in chats.chats.Values)
             {
                 if (chat is Channel channel)
@@ -98,45 +96,27 @@ class TelegramUserClient
                 Console.WriteLine("Bu kanal/superguruh emas!");
                 return;
             }
-
             var participants = await client.Channels_GetParticipants(
                 channel: channel,
                 filter: new ChannelParticipantsRecent(),
                 offset: 0,
                 limit: 200
             );
-
             Console.WriteLine($"Jami {participants.users.Count} a'zo topildi");
-
             var messageText = "📢 Diqqat barcha a'zolar!\n\n";
             var entities = new System.Collections.Generic.List<MessageEntity>();
-
             int offset = messageText.Length;
-
             foreach (var userBase in participants.users.Values)
             {
                 if (userBase is User user && !user.IsBot)
                 {
-                    string displayName = !string.IsNullOrEmpty(user.first_name)
-                        ? user.first_name
-                        : user.username ?? "User";
-
-                    string mention = $"{displayName} ";
+                    string displayName = !string.IsNullOrEmpty(user.first_name) ? user.first_name : user.username ?? "User"; string mention = $"{displayName} ";
                     messageText += mention;
-
-                    entities.Add(new InputMessageEntityMentionName
-                    {
-                        offset = offset,
-                        length = mention.TrimEnd().Length,
-                        user_id = new InputUser(user.id, user.access_hash)
-                    });
-
+                    entities.Add(new InputMessageEntityMentionName { offset = offset, length = mention.TrimEnd().Length, user_id = new InputUser(user.id, user.access_hash) });
                     offset += mention.Length;
                 }
             }
-
             await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
-
             Console.WriteLine("Xabar muvaffaqiyatli yuborildi!");
         }
         catch (Exception ex)
