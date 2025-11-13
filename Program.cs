@@ -10,14 +10,12 @@ class TelegramUserClient
 
     static async Task Main(string[] args)
     {
-        // API ma'lumotlarini kiriting (https://my.telegram.org/apps dan oling)
         client = new WTelegram.Client(Config);
 
-        // Login qiling
+        // Login qilish
         var user = await client.LoginUserIfNeeded();
         Console.WriteLine($"Salom, {user.first_name}!");
 
-        // BIRINCHI: Barcha guruhlaringizni ko'rish
         await ListAllGroups();
 
         Console.WriteLine("\n\nGuruh ID ni kiriting (yuqoridagi ro'yxatdan):");
@@ -46,11 +44,15 @@ class TelegramUserClient
             {
                 if (chat is Channel channel)
                 {
-                    Console.WriteLine($"📢 {channel.Title}");
-                    Console.WriteLine($"   ID: {channel.id}");
-                    Console.WriteLine($"   Username: @{channel.username ?? "yo'q"}");
-                    Console.WriteLine($"   Turi: {(channel.IsChannel ? "Kanal" : "Superguruh")}");
-                    Console.WriteLine();
+                    // Faqat guruhlarni ko'rsatish (kanallarni emas)
+                    if (!channel.IsChannel)
+                    {
+                        Console.WriteLine($"👥 {channel.Title}");
+                        Console.WriteLine($"   ID: {channel.id}");
+                        Console.WriteLine($"   Username: @{channel.username ?? "yo'q"}");
+                        Console.WriteLine($"   Turi: Superguruh");
+                        Console.WriteLine();
+                    }
                 }
                 else if (chat is Chat regularChat)
                 {
@@ -71,9 +73,9 @@ class TelegramUserClient
     {
         switch (what)
         {
-            case "api_id": return "31397769"; // https://my.telegram.org/apps
+            case "api_id": return "31397769";
             case "api_hash": return "d73908f18fc54388760a4135881ea26e";
-            case "phone_number": return "+998331356933"; // Telefon raqamingiz
+            case "phone_number": return "+998331356933";
             case "verification_code":
                 Console.Write("Telegram'dan kelgan kodni kiriting: ");
                 return Console.ReadLine();
@@ -88,7 +90,6 @@ class TelegramUserClient
     {
         try
         {
-            // Chatni olish
             var chats = await client.Messages_GetAllChats();
 
             if (!chats.chats.TryGetValue(chatId, out var chatBase))
@@ -99,14 +100,12 @@ class TelegramUserClient
 
             Console.WriteLine($"Guruh: {chatBase.Title}");
 
-            // Channel sifatida cast qilish
             if (chatBase is not Channel channel)
             {
                 Console.WriteLine("Bu kanal/superguruh emas!");
                 return;
             }
 
-            // Guruh a'zolarini olish
             var participants = await client.Channels_GetParticipants(
                 channel: channel,
                 filter: new ChannelParticipantsRecent(),
@@ -116,7 +115,6 @@ class TelegramUserClient
 
             Console.WriteLine($"Jami {participants.users.Count} a'zo topildi");
 
-            // Mention uchun xabar yaratish
             var messageText = "📢 Diqqat barcha a'zolar!\n\n";
             var entities = new System.Collections.Generic.List<MessageEntity>();
 
@@ -133,7 +131,6 @@ class TelegramUserClient
                     string mention = $"{displayName} ";
                     messageText += mention;
 
-                    // Mention entity yaratish
                     entities.Add(new InputMessageEntityMentionName
                     {
                         offset = offset,
@@ -145,7 +142,6 @@ class TelegramUserClient
                 }
             }
 
-            // Xabarni yuborish
             await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
 
             Console.WriteLine("Xabar muvaffaqiyatli yuborildi!");
@@ -156,8 +152,4 @@ class TelegramUserClient
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
         }
     }
-
-   
 }
-
- 
