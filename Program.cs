@@ -34,7 +34,6 @@ class TelegramUserClient
         }
     }
 
-    // Barcha guruhlarni ko'rsatish
     static async Task ListAllGroups()
     {
         try
@@ -68,7 +67,6 @@ class TelegramUserClient
         }
     }
 
-    // Konfiguratsiya (API ID va API Hash kiritish)
     static string Config(string what)
     {
         switch (what)
@@ -86,7 +84,6 @@ class TelegramUserClient
         }
     }
 
-    // Barcha a'zolarni mention qilish
     static async Task MentionAllMembers(long chatId)
     {
         try
