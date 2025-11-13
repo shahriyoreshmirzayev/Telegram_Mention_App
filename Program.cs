@@ -7,15 +7,11 @@ class TelegramUserClient
     static async Task Main(string[] args)
     {
         client = new WTelegram.Client(Config);
-
         var user = await client.LoginUserIfNeeded();
         Console.WriteLine($"Salom, {user.first_name}!");
-
         await ListAllGroups();
-
         Console.WriteLine("\n\nGuruh ID ni kiriting (yuqoridagi ro'yxatdan):");
         string input = Console.ReadLine();
-
         if (long.TryParse(input, out long chatId))
         {
             await MentionAllMembers(chatId);
@@ -88,20 +84,13 @@ class TelegramUserClient
                 Console.WriteLine("Guruh topilmadi!");
                 return;
             }
-
             Console.WriteLine($"Guruh: {chatBase.Title}");
-
             if (chatBase is not Channel channel)
             {
                 Console.WriteLine("Bu kanal/superguruh emas!");
                 return;
             }
-            var participants = await client.Channels_GetParticipants(
-                channel: channel,
-                filter: new ChannelParticipantsRecent(),
-                offset: 0,
-                limit: 200
-            );
+            var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: 0, limit: 200);
             Console.WriteLine($"Jami {participants.users.Count} a'zo topildi");
             var messageText = "📢 Diqqat barcha a'zolar!\n\n";
             var entities = new System.Collections.Generic.List<MessageEntity>();
