@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using TL;
-using WTelegram;
+﻿using TL;
 
 class TelegramUserClient
 {
@@ -12,7 +8,6 @@ class TelegramUserClient
     {
         client = new WTelegram.Client(Config);
 
-        // Login qilish
         var user = await client.LoginUserIfNeeded();
         Console.WriteLine($"Salom, {user.first_name}!");
 
@@ -23,7 +18,6 @@ class TelegramUserClient
 
         if (long.TryParse(input, out long chatId))
         {
-            // A'zolarni mention qilish
             await MentionAllMembers(chatId);
         }
         else
@@ -44,7 +38,6 @@ class TelegramUserClient
             {
                 if (chat is Channel channel)
                 {
-                    // Faqat guruhlarni ko'rsatish (kanallarni emas)
                     if (!channel.IsChannel)
                     {
                         Console.WriteLine($"👥 {channel.Title}");
