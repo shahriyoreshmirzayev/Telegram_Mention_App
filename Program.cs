@@ -3,7 +3,8 @@
 class TelegramUserClient
 {
     static WTelegram.Client client;
-
+    //2771388374 Mafia Game yangisi
+    //3038396242 Mafia Game eskisi
     static async Task Main(string[] args)
     {
         client = new WTelegram.Client(Config);
@@ -80,6 +81,7 @@ class TelegramUserClient
             var chats = await client.Messages_GetAllChats();
 
             if (!chats.chats.TryGetValue(chatId, out var chatBase))
+
             {
                 Console.WriteLine("Guruh topilmadi!");
                 return;
@@ -90,7 +92,7 @@ class TelegramUserClient
                 Console.WriteLine("Bu kanal/superguruh emas!");
                 return;
             }
-            var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: 0, limit: 200);
+            var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: 0, limit: 500);
             Console.WriteLine($"Jami {participants.users.Count} a'zo topildi");
             var messageText = "📢 Diqqat barcha a'zolar!\n\n";
             var entities = new System.Collections.Generic.List<MessageEntity>();
