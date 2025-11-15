@@ -1,4 +1,5 @@
-﻿using TL;
+﻿using TelegramMentionApp;
+using TL;
 
 class TelegramUserClient
 {
@@ -7,22 +8,25 @@ class TelegramUserClient
     //3038396242 Mafia Game eskisi
     static async Task Main(string[] args)
     {
-        client = new WTelegram.Client(Config);
-        var user = await client.LoginUserIfNeeded();
-        Console.WriteLine($"Salom, {user.first_name}!");
+        //client = new WTelegram.Client(Config);
+        //var user = await client.LoginUserIfNeeded();
+        //Console.WriteLine($"Salom, {user.first_name}!");
 
-        await ListAllGroups();
+        //await ListAllGroups();
 
-        Console.WriteLine("\nGuruh ID ni kiriting:");
-        string input = Console.ReadLine();
-        if (long.TryParse(input, out long chatId))
-        {
-            await MentionAllMembers(chatId);
-        }
-        else
-        {
-            Console.WriteLine("Noto'g'ri ID!");
-        }
+        //Console.WriteLine("\nGuruh ID ni kiriting:");
+        //string input = Console.ReadLine();
+        //if (long.TryParse(input, out long chatId))
+        //{
+        //    await MentionAllMembers(chatId);
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Noto'g'ri ID!");
+        //}
+
+        OneUser user = new OneUser();
+
     }
 
     static async Task ListAllGroups()
