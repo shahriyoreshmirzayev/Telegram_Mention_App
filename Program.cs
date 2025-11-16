@@ -97,12 +97,7 @@ class TelegramUserClient
 
             while (true)
             {
-                var participants = await client.Channels_GetParticipants(
-                    channel: channel,
-                    filter: new ChannelParticipantsRecent(),
-                    offset: offset,
-                    limit: limit
-                );
+                var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: offset, limit: limit);
 
                 Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
                 foreach (var userBase in participants.users.Values)
