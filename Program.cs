@@ -22,6 +22,7 @@ class TelegramUserClient
         }
     }
 
+
     static async Task ListAllGroups()
     {
         try
@@ -63,7 +64,6 @@ class TelegramUserClient
             case "api_id": return "31397769";
             case "api_hash": return "d73908f18fc54388760a4135881ea26e";
             case "phone_number": return "+998331356933";
-
             case "verification_code":
                 Console.Write("Telegram'dan kelgan kodni kiriting: ");
                 return Console.ReadLine();
@@ -85,19 +85,15 @@ class TelegramUserClient
                 Console.WriteLine("Guruh topilmadi!");
                 return;
             }
-
             Console.WriteLine($"Guruh: {chatBase.Title}");
-
             if (chatBase is not Channel channel)
             {
                 Console.WriteLine("Bu kanal/superguruh emas!");
                 return;
             }
-
-            // BARCHA a'zolarni olish uchun offset bilan ishlash
             var allUsers = new Dictionary<long, User>();
             int offset = 0;
-            int limit = 50; // Har bir so'rovda 50 ta a'zo
+            int limit = 50;
 
             while (true)
             {
@@ -109,8 +105,6 @@ class TelegramUserClient
                 );
 
                 Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
-
-                // Foydalanuvchilarni qo'shish
                 foreach (var userBase in participants.users.Values)
                 {
                     if (userBase is User user && !user.IsBot)
@@ -118,70 +112,83 @@ class TelegramUserClient
                         allUsers[user.id] = user;
                     }
                 }
-
-                // Agar kamroq foydalanuvchi qaytgan bo'lsa, demak oxirgi bo'lim
                 if (participants.users.Count < limit)
                     break;
-
                 offset += participants.users.Count;
-
-                // Telegram API cheklovlarini oldini olish uchun biroz kutish
                 await Task.Delay(1000);
             }
 
             Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
             Console.WriteLine("Xabar tayyorlanmoqda...\n");
-
-            // Telegram xabar uzunligi cheklovi: 4096 belgi
-            // Agar a'zolar ko'p bo'lsa, bir nechta xabarga bo'lib yuborish kerak
-            const int maxMessageLength = 4000; // Biroz zahira qoldiramiz
-
+            const int maxMessageLength = 4000;
             var messageText = "📢 Diqqat barcha a'zolar!\n\n";
             var entities = new List<MessageEntity>();
             int currentOffset = messageText.Length;
             int mentionCount = 0;
-
             foreach (var user in allUsers.Values)
             {
-                string displayName = !string.IsNullOrEmpty(user.first_name)
-                    ? user.first_name
-                    : user.username ?? "User";
+                string mention;
 
-                string mention = $"{displayName} ";
-
-                // Agar xabar juda uzun bo'lib ketayotgan bo'lsa, yuborib yangi xabar boshlaymiz
-                if (messageText.Length + mention.Length > maxMessageLength)
+                if (!string.IsNullOrEmpty(user.username))
                 {
-                    await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
-                    Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+                    mention = $"@{user.username} ";
 
-                    // Yangi xabar uchun tayyorlanish
-                    await Task.Delay(2000); // Spam deb olinmaslik uchun kutamiz
-                    messageText = "📢 Davomi...\n\n";
-                    entities.Clear();
-                    currentOffset = messageText.Length;
-                    mentionCount = 0;
+                    if (messageText.Length + mention.Length > maxMessageLength)
+                    {
+                        await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+                        Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+                        await Task.Delay(2000);
+                        messageText = "📢 Davomi...\n\n";
+                        entities.Clear();
+                        currentOffset = messageText.Length;
+                        mentionCount = 0;
+                    }
+
+                    messageText += mention;
+                    entities.Add(new MessageEntityMention
+                    {
+                        offset = currentOffset,
+                        length = mention.TrimEnd().Length
+                    });
+
+                    currentOffset += mention.Length;
+                    mentionCount++;
                 }
-
-                messageText += mention;
-                entities.Add(new InputMessageEntityMentionName
+                else
                 {
-                    offset = currentOffset,
-                    length = mention.TrimEnd().Length,
-                    user_id = new InputUser(user.id, user.access_hash)
-                });
+                    string displayName = !string.IsNullOrEmpty(user.first_name) ? user.first_name : "User";
 
-                currentOffset += mention.Length;
-                mentionCount++;
+                    mention = $"{displayName} ";
+
+                    if (messageText.Length + mention.Length > maxMessageLength)
+                    {
+                        await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+                        Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+                        await Task.Delay(2000);
+                        messageText = "📢 Davomi...\n\n";
+                        entities.Clear();
+                        currentOffset = messageText.Length;
+                        mentionCount = 0;
+                    }
+
+                    messageText += mention;
+                    entities.Add(new InputMessageEntityMentionName
+                    {
+                        offset = currentOffset,
+                        length = mention.TrimEnd().Length,
+                        user_id = new InputUser(user.id, user.access_hash)
+                    });
+
+                    currentOffset += mention.Length;
+                    mentionCount++;
+                }
             }
 
-            // Oxirgi xabarni yuborish
             if (mentionCount > 0)
             {
                 await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
                 Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
             }
-
             Console.WriteLine($"\n🎉 Jami {allUsers.Count} ta a'zo muvaffaqiyatli mention qilindi!");
         }
         catch (Exception ex)
