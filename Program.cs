@@ -1,4 +1,4 @@
-﻿ using TL;
+﻿using TL;
 //2771388374 game yangisi
 
 
@@ -100,12 +100,7 @@ class TelegramUserClient
 
             Console.WriteLine($"Superguruh: {channel.Title}");
 
-            var participants = await client.Channels_GetParticipants(
-                channel: channel,
-                filter: new ChannelParticipantsRecent(),
-                offset: 0,
-                limit: 200
-            );
+            var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: 0, limit: 200);
 
             var users = new List<User>();
             int offset = 0;
@@ -144,19 +139,9 @@ class TelegramUserClient
                     {
                         string name = user.first_name ?? "Foydalanuvchi";
                         messageText = $"{name} ";
-                        entities = new[] {
-                            new InputMessageEntityMentionName {
-                                offset = 0,
-                                length = name.Length,
-                                user_id = new InputUser(user.id, user.access_hash)
-                            }
-                        };
+                        entities = new[] { new InputMessageEntityMentionName { offset = 0, length = name.Length, user_id = new InputUser(user.id, user.access_hash) } };
 
-                        await client.SendMessageAsync(
-                            channel,
-                            messageText,
-                            entities: entities
-                        );
+                        await client.SendMessageAsync(channel, messageText, entities: entities);
                     }
 
                     sent++;
