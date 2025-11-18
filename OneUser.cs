@@ -10,7 +10,12 @@ public class OneUser
     public void OneUsers()
     {
 
-        /*class TelegramUserClient
+        /*
+         * 
+         
+        
+        
+        class TelegramUserClient
 {
     static WTelegram.Client client;
     //2771388374 Mafia Game yangisi
@@ -195,7 +200,12 @@ public class OneUser
             Console.WriteLine($"Umumiy xatolik: {ex.Message}\n{ex.StackTrace}");
         }
     }
-}*/
+}
+        
+         
+         
+         
+         */
     }
 }
 
