@@ -2,6 +2,7 @@
 //2771388374 game yangisi
 
 
+/*
 class TelegramUserClient
 {
     static WTelegram.Client client;
@@ -12,9 +13,7 @@ class TelegramUserClient
         client = new WTelegram.Client(Config);
         var user = await client.LoginUserIfNeeded();
         Console.WriteLine($"Salom, {user.first_name}!");
-
         await ListAllGroups();
-
         Console.WriteLine("\nGuruh ID ni kiriting:");
         string input = Console.ReadLine();
         if (long.TryParse(input, out long chatId))
@@ -169,8 +168,8 @@ class TelegramUserClient
             Console.WriteLine($"Umumiy xatolik: {ex.Message}\n{ex.StackTrace}");
         }
     }
-}
-/*
+}*/
+
 
 class TelegramUserClient
 {
@@ -377,5 +376,3 @@ class TelegramUserClient
         }
     }
 }
-
-*/
