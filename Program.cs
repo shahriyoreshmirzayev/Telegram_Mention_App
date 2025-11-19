@@ -255,9 +255,132 @@ class TelegramUserClient
             default: return null;
         }
     }
-
-
     static async Task MentionAllMembers(long chatId)
+    {
+        try
+        {
+            var chats = await client.Messages_GetAllChats();
+
+            if (!chats.chats.TryGetValue(chatId, out var chatBase))
+            {
+                Console.WriteLine("Guruh topilmadi!");
+                return;
+            }
+
+            Console.WriteLine($"Guruh: {chatBase.Title}");
+
+            if (chatBase is not Channel channel)
+            {
+                Console.WriteLine("Bu kanal/superguruh emas!");
+                return;
+            }
+
+            // --- A'zolarni olish ---
+            var allUsers = new Dictionary<long, User>();
+            int offset = 0;
+            int limit = 50;
+
+            while (true)
+            {
+                var participants = await client.Channels_GetParticipants(
+                    channel: channel,
+                    filter: new ChannelParticipantsRecent(),
+                    offset: offset,
+                    limit: limit
+                );
+
+                Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
+
+                foreach (var userBase in participants.users.Values)
+                {
+                    if (userBase is User user && !user.IsBot)
+                        allUsers[user.id] = user;
+                }
+
+                if (participants.users.Count < limit)
+                    break;
+
+                offset += participants.users.Count;
+                await Task.Delay(1000);
+            }
+
+            Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
+
+            // --- 100 ta USER limit ---
+            const int maxUserPerMessage = 10;
+
+            var messageText = "📢 Hamma o'yinga qo'shilsin!\n\n";
+            var entities = new List<MessageEntity>();
+            int currentOffset = messageText.Length;
+            int countInCurrentMessage = 0;
+
+            foreach (var user in allUsers.Values)
+            {
+                string mention;
+                MessageEntity entity;
+
+                if (!string.IsNullOrEmpty(user.username))
+                {
+                    mention = $"@{user.username} ";
+                    entity = new MessageEntityMention
+                    {
+                        offset = currentOffset,
+                        length = mention.Trim().Length
+                    };
+                }
+                else
+                {
+                    string name = !string.IsNullOrEmpty(user.first_name) ? user.first_name : "User";
+                    mention = $"{name} ";
+                    entity = new InputMessageEntityMentionName
+                    {
+                        offset = currentOffset,
+                        length = mention.Trim().Length,
+                        user_id = new InputUser(user.id, user.access_hash)
+                    };
+                }
+
+                // Agar xabarda 100 ta mention to‘lsa – jo‘natamiz
+                if (countInCurrentMessage >= maxUserPerMessage)
+                {
+                    await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+                    Console.WriteLine($"➡  {countInCurrentMessage} ta mention yuborildi.");
+
+                    await Task.Delay(2000);
+
+                    // yangi xabar
+                    messageText = "📢 Hamma o'yinga qo'shilsin...\n\n";
+                    entities.Clear();
+                    currentOffset = messageText.Length;
+                    countInCurrentMessage = 0;
+                }
+
+                // Qabul qilamiz
+                messageText += mention;
+                entities.Add(entity);
+                currentOffset += mention.Length;
+                countInCurrentMessage++;
+            }
+
+            // oxirgi qismi
+            if (countInCurrentMessage > 0)
+            {
+                await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+                Console.WriteLine($"➡  {countInCurrentMessage} ta mention yuborildi.");
+            }
+
+            Console.WriteLine("\n🎉 Barcha a'zolar mention qilindi!");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Xatolik: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+
+    /*static async Task MentionAllMembers(long chatId)
     {
         try
         {
@@ -374,5 +497,5 @@ class TelegramUserClient
             Console.WriteLine($"❌ Xatolik: {ex.Message}");
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
         }
-    }
+    }*/
 }
