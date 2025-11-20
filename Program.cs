@@ -170,7 +170,6 @@ class TelegramUserClient
     }
 }*/
 
-
 class TelegramUserClient
 {
     static WTelegram.Client client;
