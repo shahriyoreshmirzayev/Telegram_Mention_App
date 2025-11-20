@@ -192,7 +192,6 @@ class TelegramUserClient
         }
     }
 
-
     static async Task ListAllGroups()
     {
         try
