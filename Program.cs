@@ -233,7 +233,7 @@ class TelegramUserClient
             case "api_id": return "31397769";
             case "api_hash": return "d73908f18fc54388760a4135881ea26e";
             case "phone_number": return "+998331356933";
-                 
+
             case "email":
                 Console.Write("Telegram akkauntiga ulangan EMAIL kiriting: ");
                 return Console.ReadLine();
@@ -320,22 +320,13 @@ class TelegramUserClient
                 if (!string.IsNullOrEmpty(user.username))
                 {
                     mention = $"@{user.username} ";
-                    entity = new MessageEntityMention
-                    {
-                        offset = currentOffset,
-                        length = mention.Trim().Length
-                    };
+                    entity = new MessageEntityMention { offset = currentOffset, length = mention.Trim().Length };
                 }
                 else
                 {
                     string name = !string.IsNullOrEmpty(user.first_name) ? user.first_name : "User";
                     mention = $"{name} ";
-                    entity = new InputMessageEntityMentionName
-                    {
-                        offset = currentOffset,
-                        length = mention.Trim().Length,
-                        user_id = new InputUser(user.id, user.access_hash)
-                    };
+                    entity = new InputMessageEntityMentionName { offset = currentOffset, length = mention.Trim().Length, user_id = new InputUser(user.id, user.access_hash) };
                 }
 
                 // Agar xabarda 100 ta mention to‘lsa – jo‘natamiz
