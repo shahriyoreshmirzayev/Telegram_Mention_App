@@ -204,19 +204,19 @@ class TelegramUserClient
                 {
                     if (!channel.IsChannel)
                     {
-                        Console.WriteLine($"👥 {channel.Title}");
-                        Console.WriteLine($"   ID: {channel.id}");
-                        Console.WriteLine($"   Username: @{channel.username ?? "yo'q"}");
-                        Console.WriteLine($"   Turi: Superguruh");
-                        Console.WriteLine();
+                        //Console.WriteLine($"👥 {channel.Title}");
+                        //Console.WriteLine($"   ID: {channel.id}");
+                        //Console.WriteLine($"   Username: @{channel.username ?? "yo'q"}");
+                        //Console.WriteLine($"   Turi: Superguruh");
+                        //Console.WriteLine();
                     }
                 }
                 else if (chat is Chat regularChat)
                 {
-                    Console.WriteLine($"👥 {regularChat.Title}");
-                    Console.WriteLine($"   ID: {regularChat.id}");
-                    Console.WriteLine($"   Turi: Oddiy guruh");
-                    Console.WriteLine();
+                    //Console.WriteLine($"👥 {regularChat.Title}");
+                    //Console.WriteLine($"   ID: {regularChat.id}");
+                    //Console.WriteLine($"   Turi: Oddiy guruh");
+                    //Console.WriteLine();
                 }
             }
         }
@@ -305,7 +305,7 @@ class TelegramUserClient
             Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
 
             // --- 100 ta USER limit ---2771388374
-            const int maxUserPerMessage = 25;
+            const int maxUserPerMessage = 20;
 
             var messageText = "📢 Hamma o'yinga qo'shilsin!\n\n";
             var entities = new List<MessageEntity>();
