@@ -266,7 +266,6 @@ class TelegramUserClient
             }
 
             Console.WriteLine($"Guruh: {chatBase.Title}");
-
             if (chatBase is not Channel channel)
             {
                 Console.WriteLine("Bu kanal/superguruh emas!");
