@@ -2,7 +2,7 @@
 //2771388374 game yangisi
 
 
-/*
+
 class TelegramUserClient
 {
     static WTelegram.Client client;
@@ -168,9 +168,9 @@ class TelegramUserClient
             Console.WriteLine($"Umumiy xatolik: {ex.Message}\n{ex.StackTrace}");
         }
     }
-}*/
+}
 
-class TelegramUserClient
+/*class TelegramUserClient
 {
     static WTelegram.Client client;
 
@@ -368,7 +368,7 @@ class TelegramUserClient
     }
 
 
-    /*static async Task MentionAllMembers(long chatId)
+    *//*static async Task MentionAllMembers(long chatId)
     {
         try
         {
@@ -485,5 +485,5 @@ class TelegramUserClient
             Console.WriteLine($"❌ Xatolik: {ex.Message}");
             Console.WriteLine($"Stack trace: {ex.StackTrace}");
         }
-    }*/
-}
+    }*//*
+}*/
