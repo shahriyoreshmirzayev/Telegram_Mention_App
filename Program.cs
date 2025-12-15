@@ -2,7 +2,7 @@
 //2771388374 game yangisi
 
 
-
+/*
 class TelegramUserClient
 {
     static WTelegram.Client client;
@@ -168,9 +168,9 @@ class TelegramUserClient
             Console.WriteLine($"Umumiy xatolik: {ex.Message}\n{ex.StackTrace}");
         }
     }
-}
+}*/
 
-/*class TelegramUserClient
+class TelegramUserClient
 {
     static WTelegram.Client client;
 
@@ -368,122 +368,122 @@ class TelegramUserClient
     }
 
 
-    *//*static async Task MentionAllMembers(long chatId)
-    {
-        try
-        {
-            var chats = await client.Messages_GetAllChats();
+    //static async Task MentionAllMembers(long chatId)
+    //{
+    //    try
+    //    {
+    //        var chats = await client.Messages_GetAllChats();
 
-            if (!chats.chats.TryGetValue(chatId, out var chatBase))
-            {
-                Console.WriteLine("Guruh topilmadi!");
-                return;
-            }
-            Console.WriteLine($"Guruh: {chatBase.Title}");
-            if (chatBase is not Channel channel)
-            {
-                Console.WriteLine("Bu kanal/superguruh emas!");
-                return;
-            }
-            var allUsers = new Dictionary<long, User>();
-            int offset = 0;
-            int limit = 50;
+    //        if (!chats.chats.TryGetValue(chatId, out var chatBase))
+    //        {
+    //            Console.WriteLine("Guruh topilmadi!");
+    //            return;
+    //        }
+    //        Console.WriteLine($"Guruh: {chatBase.Title}");
+    //        if (chatBase is not Channel channel)
+    //        {
+    //            Console.WriteLine("Bu kanal/superguruh emas!");
+    //            return;
+    //        }
+    //        var allUsers = new Dictionary<long, User>();
+    //        int offset = 0;
+    //        int limit = 50;
 
-            while (true)
-            {
-                var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: offset, limit: limit);
+    //        while (true)
+    //        {
+    //            var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: offset, limit: limit);
 
-                Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
-                foreach (var userBase in participants.users.Values)
-                {
-                    if (userBase is User user && !user.IsBot)
-                    {
-                        allUsers[user.id] = user;
-                    }
-                }
-                if (participants.users.Count < limit)
-                    break;
-                offset += participants.users.Count;
-                await Task.Delay(1000);
-            }
+    //            Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
+    //            foreach (var userBase in participants.users.Values)
+    //            {
+    //                if (userBase is User user && !user.IsBot)
+    //                {
+    //                    allUsers[user.id] = user;
+    //                }
+    //            }
+    //            if (participants.users.Count < limit)
+    //                break;
+    //            offset += participants.users.Count;
+    //            await Task.Delay(1000);
+    //        }
 
-            Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
-            Console.WriteLine("Xabar tayyorlanmoqda...\n");
-            const int maxMessageLength = 4000;
-            var messageText = "📢 Diqqat barcha a'zolar!\n\n";
-            var entities = new List<MessageEntity>();
-            int currentOffset = messageText.Length;
-            int mentionCount = 0;
-            foreach (var user in allUsers.Values)
-            {
-                string mention;
+    //        Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
+    //        Console.WriteLine("Xabar tayyorlanmoqda...\n");
+    //        const int maxMessageLength = 4000;
+    //        var messageText = "📢 Diqqat barcha a'zolar!\n\n";
+    //        var entities = new List<MessageEntity>();
+    //        int currentOffset = messageText.Length;
+    //        int mentionCount = 0;
+    //        foreach (var user in allUsers.Values)
+    //        {
+    //            string mention;
 
-                if (!string.IsNullOrEmpty(user.username))
-                {
-                    mention = $"@{user.username} ";
+    //            if (!string.IsNullOrEmpty(user.username))
+    //            {
+    //                mention = $"@{user.username} ";
 
-                    if (messageText.Length + mention.Length > maxMessageLength)
-                    {
-                        await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
-                        Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
-                        await Task.Delay(2000);
-                        messageText = "📢 Davomi...\n\n";
-                        entities.Clear();
-                        currentOffset = messageText.Length;
-                        mentionCount = 0;
-                    }
+    //                if (messageText.Length + mention.Length > maxMessageLength)
+    //                {
+    //                    await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+    //                    Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+    //                    await Task.Delay(2000);
+    //                    messageText = "📢 Davomi...\n\n";
+    //                    entities.Clear();
+    //                    currentOffset = messageText.Length;
+    //                    mentionCount = 0;
+    //                }
 
-                    messageText += mention;
-                    entities.Add(new MessageEntityMention
-                    {
-                        offset = currentOffset,
-                        length = mention.TrimEnd().Length
-                    });
+    //                messageText += mention;
+    //                entities.Add(new MessageEntityMention
+    //                {
+    //                    offset = currentOffset,
+    //                    length = mention.TrimEnd().Length
+    //                });
 
-                    currentOffset += mention.Length;
-                    mentionCount++;
-                }
-                else
-                {
-                    string displayName = !string.IsNullOrEmpty(user.first_name) ? user.first_name : "User";
+    //                currentOffset += mention.Length;
+    //                mentionCount++;
+    //            }
+    //            else
+    //            {
+    //                string displayName = !string.IsNullOrEmpty(user.first_name) ? user.first_name : "User";
 
-                    mention = $"{displayName} ";
+    //                mention = $"{displayName} ";
 
-                    if (messageText.Length + mention.Length > maxMessageLength)
-                    {
-                        await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
-                        Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
-                        await Task.Delay(2000);
-                        messageText = "📢 Davomi...\n\n";
-                        entities.Clear();
-                        currentOffset = messageText.Length;
-                        mentionCount = 0;
-                    }
+    //                if (messageText.Length + mention.Length > maxMessageLength)
+    //                {
+    //                    await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+    //                    Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+    //                    await Task.Delay(2000);
+    //                    messageText = "📢 Davomi...\n\n";
+    //                    entities.Clear();
+    //                    currentOffset = messageText.Length;
+    //                    mentionCount = 0;
+    //                }
 
-                    messageText += mention;
-                    entities.Add(new InputMessageEntityMentionName
-                    {
-                        offset = currentOffset,
-                        length = mention.TrimEnd().Length,
-                        user_id = new InputUser(user.id, user.access_hash)
-                    });
+    //                messageText += mention;
+    //                entities.Add(new InputMessageEntityMentionName
+    //                {
+    //                    offset = currentOffset,
+    //                    length = mention.TrimEnd().Length,
+    //                    user_id = new InputUser(user.id, user.access_hash)
+    //                });
 
-                    currentOffset += mention.Length;
-                    mentionCount++;
-                }
-            }
+    //                currentOffset += mention.Length;
+    //                mentionCount++;
+    //            }
+    //        }
 
-            if (mentionCount > 0)
-            {
-                await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
-                Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
-            }
-            Console.WriteLine($"\n🎉 Jami {allUsers.Count} ta a'zo muvaffaqiyatli mention qilindi!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Xatolik: {ex.Message}");
-            Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        }
-    }*//*
-}*/
+    //        if (mentionCount > 0)
+    //        {
+    //            await client.SendMessageAsync(channel, messageText, entities: entities.ToArray());
+    //            Console.WriteLine($"✅ {mentionCount} ta a'zo yuborildi");
+    //        }
+    //        Console.WriteLine($"\n🎉 Jami {allUsers.Count} ta a'zo muvaffaqiyatli mention qilindi!");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine($"❌ Xatolik: {ex.Message}");
+    //        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+    //    }
+    //}
+}
