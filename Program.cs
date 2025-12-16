@@ -15,8 +15,8 @@ class TelegramUserClient
         string input = Console.ReadLine();
         if (long.TryParse(input, out long chatId))
         {
-            await MentionAllMembers1(chatId);
-            await MentionAllMembers2(chatId);
+            //await MentionAllMembers1(chatId);
+            //await MentionAllMembers2(chatId);
 
             Console.WriteLine("Bittalab yoki Guruh qilib chiqarish");
             int a = int.Parse(Console.ReadLine());
