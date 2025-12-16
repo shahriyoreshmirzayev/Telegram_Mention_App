@@ -159,8 +159,7 @@ class TelegramUserClient
                     Console.WriteLine($"Xato (user {user.id}): {ex.Message}");
                     await Task.Delay(2000);
                 }
-            }
-
+            } 
             Console.WriteLine($"\nMuvaffaqiyat! {sent} ta foydalanuvchi alohida xabar bilan chaqirildi.");
         }
         catch (Exception ex)
