@@ -228,7 +228,7 @@ class TelegramUserClient
             Console.WriteLine($"\nJami {allUsers.Count} ta a'zo topildi!");
 
             // --- 100 ta USER limit ---2771388374
-            const int maxUserPerMessage = 20;
+            const int maxUserPerMessage = 15;
 
             var messageText = "📢 Hamma o'yinga qo'shilsin!\n\n";
             var entities = new List<MessageEntity>();
