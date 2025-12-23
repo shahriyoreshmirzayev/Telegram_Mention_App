@@ -20,6 +20,8 @@ class TelegramUserClient
             //await MentionAllMembers2(chatId);
             */
 
+            
+            
             Console.WriteLine("Bittalab yoki Guruh qilib chiqarish:");
             Console.WriteLine("\n1-Bittalab chiqarish.\n2-Guruh qilib chiqarish\n");
 
@@ -86,7 +88,7 @@ class TelegramUserClient
             Console.WriteLine($"Xatolik: {ex.Message}");
         }
     }
-     
+
     static async Task MentionAllMembers1(long chatId)
     {
         try
@@ -122,12 +124,7 @@ class TelegramUserClient
                 offset += participants.users.Count;
                 if (participants.users.Count < 200) break;
 
-                participants = await client.Channels_GetParticipants(
-                    channel: channel,
-                    filter: new ChannelParticipantsRecent(),
-                    offset: offset,
-                    limit: 200
-                );
+                participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: offset, limit: 200);
             }
 
             Console.WriteLine($"Jami {users.Count} ta foydalanuvchi topildi.\n");
@@ -180,7 +177,7 @@ class TelegramUserClient
             Console.WriteLine($"Umumiy xatolik: {ex.Message}\n{ex.StackTrace}");
         }
     }
-     
+
     static async Task MentionAllMembers2(long chatId)
     {
         try
@@ -207,12 +204,7 @@ class TelegramUserClient
 
             while (true)
             {
-                var participants = await client.Channels_GetParticipants(
-                    channel: channel,
-                    filter: new ChannelParticipantsRecent(),
-                    offset: offset,
-                    limit: limit
-                );
+                var participants = await client.Channels_GetParticipants(channel: channel, filter: new ChannelParticipantsRecent(), offset: offset, limit: limit);
 
                 Console.WriteLine($"Yuklanmoqda: {offset} dan {offset + participants.users.Count} gacha...");
 
