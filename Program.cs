@@ -21,7 +21,7 @@ class TelegramUserClient
             */
 
             Console.WriteLine("Bittalab yoki Guruh qilib chiqarish:");
-            Console.WriteLine("\n1-Bittalab chiqarish.\n2-GUruh qilib chiqarish\n");
+            Console.WriteLine("\n1-Bittalab chiqarish.\n2-Guruh qilib chiqarish\n");
 
             int a = int.Parse(Console.ReadLine());
             if (a == 1)
