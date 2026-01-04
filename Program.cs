@@ -141,13 +141,13 @@ class TelegramUserClient
 
                     if (!string.IsNullOrEmpty(user.username))
                     {
-                        messageText = $"@{user.username} Yangi Yil Bilan !";
+                        messageText = $"@{user.username} o'yinga qo'shililar";
                         await client.SendMessageAsync(channel, messageText);
                     }
                     else
                     {
                         string name = user.first_name ?? "Foydalanuvchi";
-                        messageText = $"{name} Yangi Yil Bilan !";
+                        messageText = $"{name} o'yinga qo'shililar";
                         entities = new[] { new InputMessageEntityMentionName { offset = 0, length = name.Length, user_id = new InputUser(user.id, user.access_hash) } };
 
                         await client.SendMessageAsync(channel, messageText, entities: entities);
