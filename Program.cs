@@ -21,7 +21,6 @@ class TelegramUserClient
             */
 
             
-            
             Console.WriteLine("Bittalab yoki Guruh qilib chiqarish:");
             Console.WriteLine("\n1-Bittalab chiqarish.\n2-Guruh qilib chiqarish\n");
 
